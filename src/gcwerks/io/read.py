@@ -10,8 +10,8 @@ and values of the given fields, one row per time (tab-separated).
 import argparse
 import os
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
 import pandas as pd
 
@@ -24,7 +24,7 @@ def build_parser() -> argparse.ArgumentParser:
     """Build the parser of the strip-chart command."""
     parser = argparse.ArgumentParser(
         prog="gcwerks-read",
-        description="List the fields of a GCwerks strip-chart or chromatogram file or print their values.",
+        description="List or print the fields of a GCwerks strip-chart or chromatogram file.",
     )
     parser.add_argument("file", type=Path, help="strip-chart file, or chromatogram file (*.cm)")
     parser.add_argument(
@@ -120,7 +120,11 @@ def read(path: Path, format: str = "auto") -> tuple[str, pd.DataFrame, dict[str,
         return summary, list_channels(channels), channels
     fields = read_stripchart(path)
     summary = f"stripchart: {path}, nfields: {len(fields)}"
-    return summary, list_fields(fields), {name: f.to_series() for name, f in fields.items()}
+    return (
+        summary,
+        list_fields(fields),
+        {name: f.to_series() for name, f in fields.items()},
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> None:

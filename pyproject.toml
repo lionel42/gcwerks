@@ -4,24 +4,50 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gcwerks"
-version = "0.1.0"
-description = "Readers of GCwerks directories (peak list, standards, drift, ...) and CLI helpers"
+dynamic = ["version"]
+description = "Readers of GCwerks directories (peak list, standards, drift, strip charts, chromatograms) and CLI helpers"
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [{ name = "Lionel Constantin", email = "lionel.constantin@empa.ch" }]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+]
 dependencies = [
     "numpy",
     "openghg-defs",
     "pandas>=2.1",
 ]
 
+[project.urls]
+Repository = "https://github.com/lionel42/gcwerks"
+Issues = "https://github.com/lionel42/gcwerks/issues"
+
 [project.scripts]
 gcwerks-read = "gcwerks.io.read:main"
 
 [project.optional-dependencies]
 test = ["pytest"]
+dev = ["pytest", "ruff"]
+
+[tool.setuptools.dynamic]
+version = { attr = "gcwerks.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["gcwerks"]

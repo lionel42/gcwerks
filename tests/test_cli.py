@@ -35,9 +35,7 @@ def make_command(calls):
 
 def test_run_commands(gcdir):
     calls = []
-    run_commands(
-        "tool", "A tool.", [make_command(calls)], ["-C", str(gcdir), "-vv", "hello"]
-    )
+    run_commands("tool", "A tool.", [make_command(calls)], ["-C", str(gcdir), "-vv", "hello"])
     assert calls == [(gcdir, "world", 2)]
 
 

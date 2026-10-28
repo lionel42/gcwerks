@@ -36,7 +36,11 @@ def test_read_stripchart_corrupted(tmp_path, caplog):
     bad[44:48] = struct.pack("<i", 3)  # npoints
     path = tmp_path / "chart.sc"
     path.write_bytes(
-        stripchart_bytes(field_bytes("ok", 0.0, 1.0, 1.0, [1]), bytes(bad), field_bytes("x", 0, 1, 1, [1]))
+        stripchart_bytes(
+            field_bytes("ok", 0.0, 1.0, 1.0, [1]),
+            bytes(bad),
+            field_bytes("x", 0, 1, 1, [1]),
+        )
     )
     assert list(read_stripchart(path)) == ["ok"]
     assert "corrupted" in caplog.text

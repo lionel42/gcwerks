@@ -33,9 +33,7 @@ class GCWerksConfig:
     paths: GCWerksPaths
     peaks: pd.DataFrame
     aliases: dict[str, str] = field(default_factory=dict)
-    site_codes: pd.DataFrame = field(
-        default_factory=lambda: pd.DataFrame(columns=["site", "code"])
-    )
+    site_codes: pd.DataFrame = field(default_factory=lambda: pd.DataFrame(columns=["site", "code"]))
     conf: dict[str, str] = field(default_factory=dict)
 
     @classmethod

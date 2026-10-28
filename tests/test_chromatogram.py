@@ -10,7 +10,9 @@ def test_read_chromatogram(tmp_path):
     path = tmp_path / "run.cm"
     path.write_bytes(
         chromatogram_bytes(
-            [0, 166, 333, 500], [5, 9, 7, 5], [(43.0, [1, 2], [4, 2]), (19.0, [0, 1, 2, 3], [5, 5, 5, 5])]
+            [0, 166, 333, 500],
+            [5, 9, 7, 5],
+            [(43.0, [1, 2], [4, 2]), (19.0, [0, 1, 2, 3], [5, 5, 5, 5])],
         )
     )
     chromatogram = read_chromatogram(path)
@@ -29,7 +31,9 @@ def test_read_chromatogram(tmp_path):
 def test_read_chromatogram_scans_as_times(tmp_path):
     # TOF files store the scan time instead of the scan index
     path = tmp_path / "run.cm"
-    path.write_bytes(chromatogram_bytes([0, 17, 33, 50], [5, 9, 7, 5], [(28.0056, [17, 33], [4, 2])]))
+    path.write_bytes(
+        chromatogram_bytes([0, 17, 33, 50], [5, 9, 7, 5], [(28.0056, [17, 33], [4, 2])])
+    )
     ion = read_chromatogram(path).ions[0]
     assert ion.mass == pytest.approx(28.0056)
     np.testing.assert_array_equal(ion.scans, [1, 2])

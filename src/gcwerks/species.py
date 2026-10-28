@@ -18,10 +18,7 @@ from openghg_defs import species_info_file
 def _species_names() -> list[set[str]]:
     """Lower-case names of each openghg species: its key and ``alt`` names."""
     species = json.loads(species_info_file.read_text())
-    return [
-        {name.lower() for name in [key, *info.get("alt", [])]}
-        for key, info in species.items()
-    ]
+    return [{name.lower() for name in [key, *info.get("alt", [])]} for key, info in species.items()]
 
 
 def species_aliases(gases: list[str]) -> dict[str, str]:
@@ -40,9 +37,7 @@ def species_aliases(gases: list[str]) -> dict[str, str]:
                 names |= species
         for name in names:
             if aliases.get(name, gas) != gas:
-                raise ValueError(
-                    f"gases {aliases[name]} and {gas} are both named {name!r}"
-                )
+                raise ValueError(f"gases {aliases[name]} and {gas} are both named {name!r}")
             aliases[name] = gas
     return aliases
 

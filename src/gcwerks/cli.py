@@ -13,8 +13,9 @@ Each command then finds the GCwerks directory in ``args.gcdir``.
 
 import argparse
 import logging
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Protocol, Sequence
+from typing import Protocol
 
 from gcwerks.paths import absolute_path
 
@@ -58,14 +59,10 @@ def add_gcdir_argument(
     """
     if default is not argparse.SUPPRESS:
         default = absolute_path(default)
-    parser.add_argument(
-        *flags, dest="gcdir", type=existing_dir, default=default, help=help
-    )
+    parser.add_argument(*flags, dest="gcdir", type=existing_dir, default=default, help=help)
 
 
-def add_verbose_argument(
-    parser: argparse.ArgumentParser, default: int | str = 0
-) -> None:
+def add_verbose_argument(parser: argparse.ArgumentParser, default: int | str = 0) -> None:
     """Add ``-v`` (info) / ``-vv`` (debug), stored in ``args.verbose``.
 
     :param parser: The parser.

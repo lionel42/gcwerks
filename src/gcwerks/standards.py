@@ -30,14 +30,10 @@ def _drift_values(segments: pd.DataFrame, times: np.ndarray) -> np.ndarray:
     t = _seconds(times)
     fit = segments["fit"].to_numpy(dtype=int)
     t0, t1 = _seconds(segments["t0"]), _seconds(segments["t1"])
-    r0, r1, p0, p1 = (
-        segments[column].to_numpy(dtype=float) for column in ["r0", "r1", "p0", "p1"]
-    )
+    r0, r1, p0, p1 = (segments[column].to_numpy(dtype=float) for column in ["r0", "r1", "p0", "p1"])
 
     order = np.argsort(np.concatenate([t0, t1]), kind="stable")
-    result = np.interp(
-        t, np.concatenate([t0, t1])[order], np.concatenate([r0, r1])[order]
-    )
+    result = np.interp(t, np.concatenate([t0, t1])[order], np.concatenate([r0, r1])[order])
 
     logarithmic = (fit == 0) & (p0 > 0) & (p1 > 0) & (p0 != p1) & (t1 > t0)
     # segment x time mask: which logarithmic segment contains each time
@@ -45,9 +41,7 @@ def _drift_values(segments: pd.DataFrame, times: np.ndarray) -> np.ndarray:
     covered = inside.any(axis=0)
     i = inside.argmax(axis=0)[covered]  # first such segment
     pressure = p0[i] + (p1[i] - p0[i]) * (t[covered] - t0[i]) / (t1[i] - t0[i])
-    result[covered] = r0[i] + (r1[i] - r0[i]) * np.log(pressure / p0[i]) / np.log(
-        p1[i] / p0[i]
-    )
+    result[covered] = r0[i] + (r1[i] - r0[i]) * np.log(pressure / p0[i]) / np.log(p1[i] / p0[i])
     return result
 
 
@@ -61,13 +55,9 @@ class Standards:
     """
 
     values: pd.DataFrame = field(
-        default_factory=lambda: pd.DataFrame(
-            index=pd.Index([], name="tank"), dtype=float
-        )
+        default_factory=lambda: pd.DataFrame(index=pd.Index([], name="tank"), dtype=float)
     )
-    drift: pd.DataFrame = field(
-        default_factory=lambda: pd.DataFrame(columns=DRIFT_COLUMNS)
-    )
+    drift: pd.DataFrame = field(default_factory=lambda: pd.DataFrame(columns=DRIFT_COLUMNS))
 
     @classmethod
     def from_files(
@@ -77,11 +67,7 @@ class Standards:
         aliases: dict[str, str] | None = None,
     ) -> "Standards":
         """Read a standards table and any number of drift files."""
-        values = (
-            read_standards(standards, aliases)
-            if standards is not None
-            else cls().values
-        )
+        values = read_standards(standards, aliases) if standards is not None else cls().values
         drift = [read_standards_drift(path, aliases) for path in drifts]
         drift = pd.concat(drift, ignore_index=True) if drift else cls().drift
         return cls(values=values, drift=drift)
@@ -101,9 +87,7 @@ class Standards:
         tanks = pd.Series(np.asarray(tanks), dtype=object)
         times = np.asarray(times, dtype="datetime64[ns]")
 
-        column = (
-            self.values[gas] if gas in self.values.columns else pd.Series(dtype=float)
-        )
+        column = self.values[gas] if gas in self.values.columns else pd.Series(dtype=float)
         result = tanks.map(column).to_numpy(dtype=float, copy=True)
 
         drift = self.drift[self.drift["gas"] == gas]

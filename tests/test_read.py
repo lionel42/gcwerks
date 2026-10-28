@@ -31,7 +31,12 @@ def test_read_chromatogram(tmp_path, capsys):
     main([str(path)])
     assert "nions: 1" in capsys.readouterr().out
     main([str(path), "-f", "tic", "-f", "43", "--sep", ","])
-    assert capsys.readouterr().out.splitlines() == ["time,tic,43", "0.0,5,", "0.5,9,4.0", "1.0,7,2.0"]
+    assert capsys.readouterr().out.splitlines() == [
+        "time,tic,43",
+        "0.0,5,",
+        "0.5,9,4.0",
+        "1.0,7,2.0",
+    ]
 
 
 def test_read_unknown_field(tmp_path, capsys):
@@ -67,7 +72,9 @@ def test_read_format_option(tmp_path, capsys):
     assert "nions: 1" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("name", ["261027.0657.air.1.sc", "261004.1054.air.7.cm", "261022.1857.air.1.cm"])
+@pytest.mark.parametrize(
+    "name", ["261027.0657.air.1.sc", "261004.1054.air.7.cm", "261022.1857.air.1.cm"]
+)
 def test_detect_format_examples(data_dir, tmp_path, name):
     expected = "stripchart" if name.endswith(".sc") else "chromatogram"
     renamed = tmp_path / "renamed"

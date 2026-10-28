@@ -141,9 +141,9 @@ def read_chromatogram(path: Path) -> Chromatogram:
     if ions and all(
         (found < stored_times.size).all()
         and (stored_times[np.minimum(found, stored_times.size - 1)] == ion.scans).all()
-        for ion, found in zip(ions, positions)
+        for ion, found in zip(ions, positions, strict=True)
     ):
-        for ion, found in zip(ions, positions):
+        for ion, found in zip(ions, positions, strict=True):
             ion.scans = found
     for ion in ions:
         if ion.scans.size and (ion.scans.min() < 0 or ion.scans.max() >= stored_times.size):

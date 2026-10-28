@@ -18,8 +18,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from gcwerks.species import resolve_alias
 from gcwerks.io.text import is_number, pad, read_table, yymmdd_to_datetime
+from gcwerks.species import resolve_alias
 
 logger = logging.getLogger(__name__)
 
@@ -71,16 +71,14 @@ def write_standards(
     header = pad("tank", 16) + "".join(f"{gas:>20}" for gas in gases)
     lines = [
         pad(tank, 16) + "".join(f"{value:20.5f}" for value in row)
-        for tank, row in zip(table.index, table.to_numpy())
+        for tank, row in zip(table.index, table.to_numpy(), strict=True)
     ]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join([header, *lines]) + "\n")
     logger.info(f"wrote {len(lines)} tanks to {path}")
 
 
-def read_standards_factors(
-    path: Path, aliases: dict[str, str] | None = None
-) -> pd.Series:
+def read_standards_factors(path: Path, aliases: dict[str, str] | None = None) -> pd.Series:
     """Read ``standards.factors``.
 
     :param path: File with lines ``gas factor``.
@@ -112,9 +110,7 @@ def read_drift_table(path: Path, aliases: dict[str, str] | None = None) -> pd.Da
     return drift
 
 
-def read_standards_drift(
-    path: Path, aliases: dict[str, str] | None = None
-) -> pd.DataFrame:
+def read_standards_drift(path: Path, aliases: dict[str, str] | None = None) -> pd.DataFrame:
     """Read a drift file to apply it.
 
     :param path: The drift file.
@@ -130,8 +126,7 @@ def read_standards_drift(
         invalid = drift[~drift[column].map(is_number)]
         if not invalid.empty:
             bad = ", ".join(
-                f"{r.tank} {r.gas} {getattr(r, column)!r}"
-                for r in invalid.itertuples()
+                f"{r.tank} {r.gas} {getattr(r, column)!r}" for r in invalid.itertuples()
             )
             raise ValueError(f"{path}: {column} values are not numbers: {bad}")
         drift[column] = drift[column].astype(float)

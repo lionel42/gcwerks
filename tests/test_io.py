@@ -38,9 +38,7 @@ def test_config_subclass_paths(gcdir):
     assert MyConfig.from_dir(gcdir).paths.extra == gcdir / "extra"
 
 
-@pytest.mark.parametrize(
-    "name", ["peak.list", "site.codes", "gcwerks.conf"]
-)
+@pytest.mark.parametrize("name", ["peak.list", "site.codes", "gcwerks.conf"])
 def test_config_missing_file_raises(tmp_path, gcdir, name):
     shutil.copytree(gcdir, tmp_path / "gcdir")
     (tmp_path / "gcdir" / "config" / name).unlink()
@@ -75,9 +73,7 @@ def test_standards_zero_is_missing(config):
 
 
 def test_standards_roundtrip(tmp_path):
-    values = pd.DataFrame(
-        {"A": [1.5, np.nan], "B": [np.nan, 2.0]}, index=["T-2", "T-1"]
-    )
+    values = pd.DataFrame({"A": [1.5, np.nan], "B": [np.nan, 2.0]}, index=["T-2", "T-1"])
     path = tmp_path / "standards"
     write_standards(values, path, ["A", "B"], exclude=["T-2"])
     back = read_standards(path)

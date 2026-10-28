@@ -3,7 +3,12 @@
 import struct
 
 SWITCH = {
-    "int": {"byte": 2000000100, "short": 2000000200, "repeat": 2000000250, "end": 2000000300},
+    "int": {
+        "byte": 2000000100,
+        "short": 2000000200,
+        "repeat": 2000000250,
+        "end": 2000000300,
+    },
     "short": {"byte": 32100, "int": 32400, "repeat": 32450, "end": 32500},
     "byte": {"short": 126, "int": 127, "repeat": -127, "end": -126},
 }
@@ -48,7 +53,21 @@ def stripchart_bytes(*fields: bytes) -> bytes:
 def chromatogram_bytes(times_ms, tic, ions) -> bytes:
     """A chromatogram file; ``ions`` are ``(mass, scans, values)``."""
     header = struct.pack(
-        "<5if4i4i", 1, 1791111264, 0, 1, 4, 1000.0, 0, 0, 0, 0, len(ions) + 1, len(tic), 0, len(tic)
+        "<5if4i4i",
+        1,
+        1791111264,
+        0,
+        1,
+        4,
+        1000.0,
+        0,
+        0,
+        0,
+        0,
+        len(ions) + 1,
+        len(tic),
+        0,
+        len(tic),
     )
     out = header + compress(times_ms) + compress(tic)
     for mass, scans, values in ions:

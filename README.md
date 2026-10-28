@@ -9,8 +9,27 @@ Python package with utilites for GCwerks https://www.gcwerks.com/
 
 
 ```
-pip install -e .            # or: pip install -e ".[test]"
+pip install gcwerks
 ```
+
+## Development
+
+```
+pip install -e ".[dev]"     # pytest and ruff
+pytest
+ruff check . && ruff format --check .   # also run by the CI on every push and pull request
+```
+
+To release, set `__version__` in `src/gcwerks/__init__.py`, commit, and push
+a tag with the same version:
+
+```
+git tag v0.1.0 && git push origin v0.1.0
+```
+
+The [publish workflow](.github/workflows/publish.yml) then runs the tests and
+publishes the package to PyPI. Running that workflow by hand from the
+Actions tab publishes to TestPyPI instead.
 
 ## Contents
 
