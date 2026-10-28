@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gcwerks"
+version = "0.1.0"
+description = "Readers of GCwerks directories (peak list, standards, drift, ...) and CLI helpers"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "openghg-defs",
+    "pandas>=2.1",
+]
+
+[project.scripts]
+gcwerks-read = "gcwerks.io.read:main"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
